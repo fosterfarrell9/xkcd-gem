@@ -19,7 +19,7 @@ class XKCD
   #   => "https://xkcd.com/891/"
 
   def self.comic
-    open("https://dynamic.xkcd.com/random/comic/").base_uri.to_s
+    URI.open("https://dynamic.xkcd.com/random/comic/").base_uri.to_s
   end
 
   def self.search(query)
@@ -43,14 +43,14 @@ class XKCD
   end
 
   def self.img
-    max = JSON.parse(open("https://xkcd.com/info.0.json").read)["num"]
+    max = JSON.parse(URI.open("https://xkcd.com/info.0.json").read)["num"]
     comic_num = 1 + rand(max - 1)
     comic_num = 1 if comic_num == 404 # Avoid 404th comic ;)
     get_comic(comic_num)
   end
 
   def self.get_comic(id)
-    comic = JSON.parse(open("https://xkcd.com/#{id}/info.0.json").read)
+    comic = JSON.parse(URI.open("https://xkcd.com/#{id}/info.0.json").read)
     "#{comic["alt"]} : #{comic["img"]}"
   end
 end
