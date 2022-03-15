@@ -19,8 +19,14 @@ class XKCD
   #   => "https://xkcd.com/891/"
 
   def self.comic
-    URI.open("https://dynamic.xkcd.com/random/comic/").base_uri.to_s
-  end
+    uri = URI.parse("https://dynamic.xkcd.com/random/comic/")
+    begin
+      uri.open(redirect: false)
+    rescue OpenURI::HTTPRedirect => redirect
+      uri = redirect.uri # assigned from the "Location" response header
+    end
+    uri.to_s
+   end
 
   def self.search(query)
     comic_id = 149 # Default to make me a sandwich if nothing can be found
